@@ -27,16 +27,17 @@
                     
                     <header class="os-header">
                         <div class="agent-card left-card">
-                            WELCOME, OVI<br>
+                            WELCOME, <span id="profile-name-display">OVI</span><br>
                             SYSTEM STATUS : ACTIVE<br>
                             ROLE : ON DUTY
                         </div>
                         <div class="center-title">
                             <h1 class="glitch-title">MOON_OS</h1>
                             <p class="sub-title">MODULAR ORGANIZATION AND OBSERVATIONAL NETWORK OPERATING SYSTEM</p>
+                            <button class="hud-btn small-btn" id="btn-edit-profile">EDIT_PROFILE</button>
                         </div>
                         <div class="agent-card right-card">
-                            AGENT : M2108
+                            AGENT : <span id="profile-agent-display">M2108</span>
                         </div>
                     </header>
 
@@ -178,6 +179,24 @@
     </div>
 
     <audio id="tides-audio-player"></audio>
+
+    <div class="profile-modal" id="profile-modal" hidden>
+        <div class="profile-modal-card">
+            <h3>PERSONALIZE_OPERATOR</h3>
+            <label class="profile-field">
+                <span>NAME</span>
+                <input type="text" id="profile-name-input" placeholder="ENTER_NAME...">
+            </label>
+            <label class="profile-field">
+                <span>AGENT_ID</span>
+                <input type="text" id="profile-agent-input" placeholder="ENTER_AGENT_ID...">
+            </label>
+            <div class="input-row">
+                <button class="hud-btn" id="btn-save-profile">SAVE</button>
+                <button class="hud-btn" id="btn-cancel-profile">CANCEL</button>
+            </div>
+        </div>
+    </div>
 
      <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="renderer.js"></script>

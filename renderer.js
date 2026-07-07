@@ -1,15 +1,34 @@
 //const THREE = require('three');
 
+function getDefaultProfile() {
+    return { name: 'OVI', agent: 'M2108' };
+}
+
+function loadProfile() {
+    try {
+        const raw = localStorage.getItem('moon_profile');
+        if(raw) {
+            const parsed = JSON.parse(raw);
+            return { ...getDefaultProfile(), ...parsed };
+        }
+    } catch (err) {
+        console.warn('Unable to load profile', err);
+    }
+    return getDefaultProfile();
+}
+
 // GLOBAL STATE
 let state = {
     tasks: JSON.parse(localStorage.getItem('moon_tasks')) || [],
     habits: JSON.parse(localStorage.getItem('moon_habits')) || [],
     totalTime: parseFloat(localStorage.getItem('moon_time')) || 0,
     playlist: [],
-    currentTrackIndex: -1
+    currentTrackIndex: -1,
+    profile: loadProfile()
 };
 
 window.addEventListener('DOMContentLoaded', () => {
+    initProfile();
     initUI();
     initMoon();
     initTasks();
@@ -19,6 +38,38 @@ window.addEventListener('DOMContentLoaded', () => {
     initTides();
     updateReflections();
 });
+
+function initProfile() {
+    const modal = document.getElementById('profile-modal');
+    const nameInput = document.getElementById('profile-name-input');
+    const agentInput = document.getElementById('profile-agent-input');
+
+    const renderProfile = () => {
+        document.getElementById('profile-name-display').innerText = state.profile.name;
+        document.getElementById('profile-agent-display').innerText = state.profile.agent;
+        nameInput.value = state.profile.name;
+        agentInput.value = state.profile.agent;
+    };
+
+    document.getElementById('btn-edit-profile').onclick = () => {
+        renderProfile();
+        modal.hidden = false;
+    };
+
+    document.getElementById('btn-cancel-profile').onclick = () => {
+        modal.hidden = true;
+    };
+
+    document.getElementById('btn-save-profile').onclick = () => {
+        state.profile.name = nameInput.value.trim() || getDefaultProfile().name;
+        state.profile.agent = agentInput.value.trim() || getDefaultProfile().agent;
+        localStorage.setItem('moon_profile', JSON.stringify(state.profile));
+        renderProfile();
+        modal.hidden = true;
+    };
+
+    renderProfile();
+}
 
 // --- 1. FREE-SCROLL UNIVERSE NAVIGATION ---
 function initUI() {
@@ -49,24 +100,7 @@ window.panTo = (sector) => {
     }
 };
     
-    switch(sector) {
-        case 'dashboard': 
-            viewport.scrollLeft = currentW; 
-            viewport.scrollTop = 0; 
-            break;
-        case 'craters':   
-            viewport.scrollLeft = 0; 
-            viewport.scrollTop = 0; 
-            break;
-        case 'tides':     
-            viewport.scrollLeft = currentW * 2; 
-            viewport.scrollTop = 0; 
-            break;
-        case 'flowtime':  
-            viewport.scrollLeft = currentW; 
-            viewport.scrollTop = currentH; 
-            break;
-    }
+//removed legacy viewport scrolling code for simplicity, now using CSS transitions and panTo function
 
 
 // --- 2. THREE.JS MAJESTIC MOON ---

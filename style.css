@@ -199,6 +199,8 @@ input {
 }
 input::placeholder { color: var(--dim-white); }
 
+.small-btn { padding: 5px 10px; font-size: 0.7rem; margin-top: 8px; }
+
 .hud-btn {
     background: transparent;
     border: 1px solid var(--white);
@@ -214,7 +216,43 @@ input::placeholder { color: var(--dim-white); }
 .mt-10 { margin-top: 10px; }
 .input-row { display: flex; gap: 5px; margin-top: 15px; }
 
-/* 7. CUSTOM SCROLLBARS */
+/* 7. PROFILE MODAL */
+.profile-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(1, 2, 5, 0.75);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+.profile-modal[hidden] { display: none; }
+.profile-modal-card {
+    width: min(90vw, 360px);
+    border: 1px solid var(--dim-white);
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    padding: 20px;
+    box-shadow: 0 0 30px rgba(255,255,255,0.1);
+}
+.profile-modal-card h3 {
+    margin: 0 0 15px;
+    font-size: 0.95rem;
+    letter-spacing: 2px;
+}
+.profile-field {
+    display: block;
+    margin-bottom: 12px;
+}
+.profile-field span {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+    opacity: 0.8;
+}
+
+/* 8. CUSTOM SCROLLBARS */
 .thin-scroll {
     max-height: 150px;
     overflow-y: auto;
@@ -327,15 +365,25 @@ input::placeholder { color: var(--dim-white); }
 #universe-viewport {
     width: 100vw !important;
     height: 100vh !important;
-    overflow: hidden !important; /* Strips out scrollbars completely */
+    overflow: scroll !important; /* Keep scrolling alive */
     position: relative !important;
+    
+    /* Native smooth gliding physics */
+    scroll-behavior: smooth !important; 
+}
+
+/* Hide the physical, ugly scrollbars entirely while keeping functionality */
+#universe-viewport::-webkit-scrollbar {
+    display: none !important;
 }
 
 #universe-map {
-    width: 300vw !important;  /* Forces the layout container to accept 3 wide columns */
-    height: 200vh !important; /* Forces the layout container to accept 2 rows deep */
+    width: 300vw !important;  /* Space to expand your universe later! */
+    height: 200vh !important; 
     display: grid !important;
     grid-template-columns: 100vw 100vw 100vw !important;
     grid-template-rows: 100vh 100vh !important;
-    transition: transform 1.2s cubic-bezier(0.65, 0, 0.15, 1) !important;
+    /* Remove transform transition so it doesn't fight the free-scroll wheel */
+    transform: none !important; 
+    transition: none !important; 
 }
