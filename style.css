@@ -1,0 +1,341 @@
+@import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Syncopate:wght@400;700&display=swap');
+
+:root {
+    --white: #ffffff;
+    --dim-white: rgba(255, 255, 255, 0.4);
+    --faint-white: rgba(255, 255, 255, 0.1);
+    --bg-color: #010205;
+    --glass-bg: rgba(0, 0, 0, 0.7);
+    --font-main: 'Courier Prime', monospace;
+    --font-title: 'Syncopate', sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body, html {
+    margin: 0; padding: 0;
+    width: 100vw; height: 100vh;
+    background: var(--bg-color);
+    color: var(--white);
+    font-family: var(--font-main);
+    overflow: hidden; /* Prevent default scrolling */
+}
+
+/* 1. GLOSSY UNIVERSE BACKGROUND */
+.star-plane {
+    position: fixed; inset: 0; z-index: -1;
+    background-image: 
+        radial-gradient(1px 1px at 10% 20%, var(--white), transparent),
+        radial-gradient(1.5px 1.5px at 40% 60%, var(--dim-white), transparent),
+        radial-gradient(2px 2px at 80% 30%, var(--white), transparent),
+        radial-gradient(1px 1px at 90% 80%, var(--dim-white), transparent);
+    background-size: 300px 300px;
+    animation: drift 150s linear infinite;
+}
+#stars-layer-2 {
+    background-size: 500px 500px;
+    opacity: 0.5;
+    animation: drift 250s linear infinite reverse;
+}
+
+@keyframes drift {
+    from { transform: translateY(0); }
+    to { transform: translateY(-1000px); }
+}
+
+/* 2. THE 2D UNIVERSE CAMERA MAP */
+#universe-viewport {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden; /* Hides scrollbars so the cinematic translate can work! */
+    position: relative;
+}
+
+#universe-map {
+    width: 300vw; height: 200vh;
+    display: grid;
+    grid-template-columns: 100vw 100vw 100vw;
+    grid-template-rows: 100vh 100vh;
+    transition: transform 1.2s cubic-bezier(0.65, 0, 0.15, 1);
+    transform: translate(-100vw, 0); /* Default: Centered on Dashboard */
+}
+
+.sector {
+    width: 100vw; height: 100vh;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 3. DASHBOARD: HEADER & AGENT CARDS */
+.dashboard-wrapper {
+    width: 100%; height: 100%;
+    padding: 30px 50px;
+    display: flex;
+    flex-direction: column;
+}
+
+.os-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.agent-card {
+    border: 1px solid var(--dim-white);
+    padding: 10px 15px;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    background: var(--glass-bg);
+    backdrop-filter: blur(5px);
+    letter-spacing: 1px;
+}
+
+.center-title { text-align: center; }
+.glitch-title {
+    font-family: var(--font-title);
+    font-size: 3rem;
+    font-weight: 700;
+    letter-spacing: 10px;
+    margin: 0;
+    text-shadow: 0 0 15px rgba(255,255,255,0.3);
+}
+.sub-title { font-size: 0.55rem; letter-spacing: 4px; opacity: 0.6; margin-top: 5px; }
+
+/* 4. DASHBOARD: HUD LAYOUT */
+.hud-grid {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.hud-panel {
+    width: 320px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    z-index: 10;
+}
+
+.module {
+    border: 1px solid var(--faint-white);
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    padding: 15px;
+    position: relative;
+    box-shadow: inset 0 0 20px rgba(255,255,255,0.02);
+}
+
+.mod-tag {
+    position: absolute;
+    top: -10px; left: 15px;
+    background: var(--white);
+    color: var(--bg-color);
+    font-size: 0.65rem;
+    font-weight: bold;
+    padding: 2px 8px;
+    letter-spacing: 1px;
+}
+
+.stat-line {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    margin-top: 15px;
+    border-bottom: 1px dashed var(--faint-white);
+    padding-bottom: 5px;
+}
+.highlight { font-weight: bold; text-shadow: 0 0 5px var(--dim-white); }
+
+/* 5. CENTER MOON & CONSTELLATION */
+.moon-sector {
+    position: relative;
+    width: 600px; height: 600px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#moon-container { width: 100%; height: 100%; z-index: 1; }
+#constellation-layer {
+    position: absolute;
+    top: 0; left: 0;
+    width: 600px; height: 600px;
+    pointer-events: none;
+    z-index: 2;
+}
+#constellation-dots { position: absolute; inset: 0; }
+
+.const-dot {
+    position: absolute;
+    width: 6px; height: 6px;
+    background: var(--white);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 10px var(--white);
+    transition: all 0.5s ease;
+}
+.const-line {
+    stroke: var(--white);
+    stroke-width: 1.5;
+    opacity: 0.6;
+    stroke-dasharray: 4;
+    transition: all 0.5s ease;
+}
+
+/* 6. BUTTONS & INPUTS */
+input {
+    width: 100%;
+    background: transparent;
+    border: 1px solid var(--dim-white);
+    color: var(--white);
+    font-family: var(--font-main);
+    padding: 8px;
+    font-size: 0.8rem;
+    outline: none;
+}
+input::placeholder { color: var(--dim-white); }
+
+.hud-btn {
+    background: transparent;
+    border: 1px solid var(--white);
+    color: var(--white);
+    font-family: var(--font-main);
+    padding: 8px 15px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+.hud-btn:hover { background: var(--white); color: var(--bg-color); box-shadow: 0 0 15px var(--white); }
+.full-width { width: 100%; }
+.mt-10 { margin-top: 10px; }
+.input-row { display: flex; gap: 5px; margin-top: 15px; }
+
+/* 7. CUSTOM SCROLLBARS */
+.thin-scroll {
+    max-height: 150px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+.thin-scroll::-webkit-scrollbar { width: 3px; }
+.thin-scroll::-webkit-scrollbar-track { background: transparent; }
+.thin-scroll::-webkit-scrollbar-thumb { background: var(--dim-white); }
+
+/* TASK & HABIT ITEMS */
+.task-item, .habit-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    margin-top: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.task-item:hover, .habit-item:hover { color: var(--dim-white); }
+.task-done { text-decoration: line-through; opacity: 0.4; }
+.del-btn { background: transparent; border: none; color: var(--dim-white); cursor: pointer; }
+.del-btn:hover { color: var(--white); }
+
+/* HABIT CHECKBOXES */
+.habit-days { display: flex; gap: 4px; }
+.h-box {
+    width: 12px; height: 12px;
+    border: 1px solid var(--dim-white);
+    cursor: pointer;
+}
+.h-box.active { background: var(--white); box-shadow: 0 0 5px var(--white); }
+
+/* 8. CRATERS & TIDES VIEWERS */
+.viewer-container {
+    width: 80%; height: 85%;
+    border: 1px solid var(--dim-white);
+    background: var(--glass-bg);
+    backdrop-filter: blur(15px);
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+.sector-header { display: flex; justify-content: space-between; border-bottom: 1px solid var(--white); padding-bottom: 10px; margin-bottom: 20px; }
+.sector-header h2 { margin: 0; font-family: var(--font-title); font-size: 1.2rem; }
+
+#craters-iframe { width: 100%; flex-grow: 1; background: #fff; border: none; }
+
+.music-console { display: flex; flex-direction: column; align-items: center; justify-content: center; flex-grow: 1; width: 60%; margin: 0 auto; }
+.audio-visualizer { height: 100px; margin-bottom: 30px; }
+.eq-bar { fill: var(--white); animation: eq 1s infinite alternate; }
+@keyframes eq { 0% { height: 5px; } 100% { height: 30px; } }
+
+.track-progress { width: 100%; display: flex; align-items: center; gap: 15px; margin-bottom: 20px; font-size: 0.8rem; }
+.progress-bar-bg { flex-grow: 1; height: 4px; background: var(--faint-white); cursor: pointer; position: relative; }
+.progress-bar-fill { height: 100%; background: var(--white); width: 0%; box-shadow: 0 0 10px var(--white); }
+
+.music-controls { display: flex; gap: 20px; }
+.big-btn { font-size: 1.5rem; padding: 10px 25px; }
+
+#tides-playlist { width: 100%; border: 1px solid var(--faint-white); padding: 10px; max-height: 200px; }
+.playlist-item { font-size: 0.8rem; padding: 5px; cursor: pointer; border-bottom: 1px dashed var(--faint-white); }
+.playlist-item:hover { background: var(--faint-white); }
+.playlist-item.playing { font-weight: bold; text-shadow: 0 0 5px var(--white); border-left: 2px solid var(--white); }
+
+/* 9. FLOWTIME (DEEP SPACE) */
+.flowtime-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    width: 100%; height: 100%;
+    justify-content: center;
+}
+.top-center { position: absolute; top: 40px; }
+
+#big-timer {
+    font-family: var(--font-title);
+    font-size: 12vw;
+    font-weight: 700;
+    text-shadow: 0 0 40px rgba(255,255,255,0.2);
+    margin-bottom: 40px;
+    letter-spacing: -5px;
+}
+
+.timer-controls { display: flex; gap: 30px; }
+.void-btn {
+    background: transparent;
+    border: 1px solid var(--white);
+    color: var(--white);
+    font-family: var(--font-title);
+    font-size: 1.5rem;
+    padding: 15px 40px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.void-btn:hover { background: var(--white); color: var(--bg-color); box-shadow: 0 0 30px var(--white); }
+
+/* CUES */
+.scroll-cue {
+    text-align: center;
+    font-size: 0.7rem;
+    margin-top: auto;
+    letter-spacing: 3px;
+    cursor: pointer;
+    animation: pulse 2s infinite;
+}
+@keyframes pulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+
+#universe-viewport {
+    width: 100vw !important;
+    height: 100vh !important;
+    overflow: hidden !important; /* Strips out scrollbars completely */
+    position: relative !important;
+}
+
+#universe-map {
+    width: 300vw !important;  /* Forces the layout container to accept 3 wide columns */
+    height: 200vh !important; /* Forces the layout container to accept 2 rows deep */
+    display: grid !important;
+    grid-template-columns: 100vw 100vw 100vw !important;
+    grid-template-rows: 100vh 100vh !important;
+    transition: transform 1.2s cubic-bezier(0.65, 0, 0.15, 1) !important;
+}

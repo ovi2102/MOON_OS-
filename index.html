@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MOON_OS // M2108</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="stars-layer-1" class="star-plane"></div>
+    <div id="stars-layer-2" class="star-plane"></div>
+
+    <div id="universe-viewport">
+        <div id="universe-map">
+
+            <section class="sector" id="sector-craters">
+                <div class="viewer-container">
+                    <div class="sector-header">
+                        <h2>CRATERS // DOCUMENT_UPLINK</h2>
+                        <button class="hud-btn return-btn" onclick="panTo('dashboard')">← RETURN_TO_ORBIT</button>
+                    </div>
+                    <iframe id="craters-iframe" src="" frameborder="0"></iframe>
+                </div>
+            </section>
+
+            <section class="sector" id="sector-dashboard">
+                <div class="dashboard-wrapper">
+                    
+                    <header class="os-header">
+                        <div class="agent-card left-card">
+                            WELCOME, OVI<br>
+                            SYSTEM STATUS : ACTIVE<br>
+                            ROLE : ON DUTY
+                        </div>
+                        <div class="center-title">
+                            <h1 class="glitch-title">MOON_OS</h1>
+                            <p class="sub-title">MODULAR ORGANIZATION AND OBSERVATIONAL NETWORK OPERATING SYSTEM</p>
+                        </div>
+                        <div class="agent-card right-card">
+                            AGENT : M2108
+                        </div>
+                    </header>
+
+                    <div class="hud-grid">
+                        
+                        <aside class="hud-panel">
+                            <div class="module" id="reflections">
+                                <div class="mod-tag">DAILY_STATS : REFLECTIONS</div>
+                                <div class="stat-line"><span>TOTAL_TIME_STUDIED</span><span id="stat-time" class="highlight">00.00h</span></div>
+                                <div class="stat-line"><span>TASKS_COMPLETED</span><span id="stat-tasks" class="highlight">0</span></div>
+                            </div>
+                            
+                            <div class="module" id="eclipse">
+                                <div class="mod-tag">IMPROVEMENT : ECLIPSE</div>
+                                <div class="graph-box">
+                                    <svg viewBox="0 0 200 50" class="hud-graph">
+                                        <polyline points="0,40 30,20 60,35 90,10 120,25 150,5 200,15" fill="none" stroke="#fff" stroke-width="1.5"/>
+                                        <circle cx="150" cy="5" r="3" fill="#fff"/>
+                                    </svg>
+                                </div>
+                            </div>
+
+                            <div class="module" id="craters-controls">
+                                <div class="mod-tag">FILE_READER : CRATERS</div>
+                                <div class="input-row">
+                                    <input type="text" id="craters-input" placeholder="PASTE_LECTURE_LINK_OR_PATH...">
+                                    <button class="hud-btn" id="btn-load-craters">ENGAGE</button>
+                                </div>
+                                <div class="input-row mt-10">
+                                    <input type="file" id="local-file-picker" accept="application/pdf, video/*, image/*" hidden>
+                                    <button class="hud-btn full-width" onclick="document.getElementById('local-file-picker').click()">BROWSE_LOCAL_FILES</button>
+                                </div>
+                            </div>
+                        </aside>
+
+                        <main class="moon-sector">
+                            <div id="constellation-layer">
+                                <svg id="constellation-lines" width="600" height="600"></svg>
+                                <div id="constellation-dots"></div>
+                            </div>
+                            <div id="moon-container"></div>
+                        </main>
+
+                        <aside class="hud-panel">
+                            <div class="module" id="orbit">
+                                <div class="mod-tag">TASK_QUEUE : ORBIT</div>
+                                <div id="todo-list" class="thin-scroll"></div>
+                                <div class="input-row mt-10">
+                                    <input type="text" id="todo-input" placeholder="CMD_NEW_TASK...">
+                                    <button class="hud-btn" id="btn-add-task">+</button>
+                                </div>
+                            </div>
+
+                            <div class="module" id="luminescence">
+                                <div class="mod-tag">HABIT_TRACKER : LUMINESCENCE</div>
+                                <div class="habit-list thin-scroll" id="habit-list"></div>
+                                <div class="input-row mt-10">
+                                    <input type="text" id="habit-input" placeholder="ADD_HABIT...">
+                                    <button class="hud-btn" id="btn-add-habit">+</button>
+                                </div>
+                            </div>
+
+                            <div class="module" id="tides-controls">
+                                <div class="mod-tag">MUSIC_PLAYER : TIDES</div>
+                                <div class="tides-info">CURRENT_TRACK: <span id="tides-current-track">NONE</span></div>
+                                <button class="hud-btn full-width mt-10" onclick="panTo('tides')">OPEN_AUDIO_CONSOLE →</button>
+                            </div>
+                        </aside>
+
+                    </div>
+                    
+                    <div class="scroll-cue" onclick="panTo('flowtime')">DESCEND_TO_DEEP_SPACE ↓</div>
+                </div>
+            </section>
+
+            <section class="sector" id="sector-tides">
+                <div class="viewer-container">
+                    <div class="sector-header">
+                        <h2>TIDES // AUDIO_CONSOLE</h2>
+                        <button class="hud-btn return-btn" onclick="panTo('dashboard')">RETURN_TO_ORBIT →</button>
+                    </div>
+                    
+                    <div class="music-console">
+                        <div class="audio-visualizer">
+                            <svg viewBox="0 0 100 30" class="eq-svg">
+                                <rect x="10" y="10" width="5" height="20" class="eq-bar"/>
+                                <rect x="25" y="5" width="5" height="25" class="eq-bar"/>
+                                <rect x="40" y="15" width="5" height="15" class="eq-bar"/>
+                                <rect x="55" y="8" width="5" height="22" class="eq-bar"/>
+                                <rect x="70" y="12" width="5" height="18" class="eq-bar"/>
+                                <rect x="85" y="4" width="5" height="26" class="eq-bar"/>
+                            </svg>
+                        </div>
+                        
+                        <div class="track-progress">
+                            <span id="tides-time-curr">0:00</span>
+                            <div class="progress-bar-bg" id="tides-progress-bg">
+                                <div class="progress-bar-fill" id="tides-progress-fill"></div>
+                            </div>
+                            <span id="tides-time-total">0:00</span>
+                        </div>
+
+                        <div class="music-controls">
+                            <button class="hud-btn big-btn" id="btn-prev">⏮</button>
+                            <button class="hud-btn big-btn" id="btn-play-pause">⏵</button>
+                            <button class="hud-btn big-btn" id="btn-next">⏭</button>
+                        </div>
+
+                        <div class="playlist-section mt-10">
+                            <div class="input-row">
+                                <input type="file" id="tides-file-picker" accept="audio/*" multiple hidden>
+                                <button class="hud-btn full-width" onclick="document.getElementById('tides-file-picker').click()">LOAD_LOCAL_AUDIO_FILES</button>
+                            </div>
+                            <div id="tides-playlist" class="thin-scroll mt-10"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="sector"></section>
+
+            <section class="sector" id="sector-flowtime">
+                <div class="flowtime-container">
+                    <button class="hud-btn return-btn top-center" onclick="panTo('dashboard')">↑ ASCEND_TO_ORBIT</button>
+                    
+                    <div id="big-timer">00:00:00</div>
+                    
+                    <div class="timer-controls">
+                        <button class="void-btn" id="btn-orbit">ORBIT</button>
+                        <button class="void-btn" id="btn-stasis">STASIS</button>
+                        <button class="void-btn" id="btn-drift">DRIFT</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="sector"></section>
+
+        </div>
+    </div>
+
+    <audio id="tides-audio-player"></audio>
+
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="renderer.js"></script>
+</body>
+</html>
