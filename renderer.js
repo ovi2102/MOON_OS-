@@ -80,25 +80,26 @@ function initUI() {
 }
 
 // Allows buttons to gracefully glide the canvas using CSS transitions
-window.panTo = (sector) => {
-    const map = document.getElementById('universe-map');
-    if (!map) return;
-    
-    switch(sector) {
-        case 'craters':   
-            map.style.transform = 'translate(0, 0)'; 
-            break;
-        case 'dashboard': 
-            map.style.transform = 'translate(-100vw, 0)'; 
-            break;
-        case 'tides':     
-            map.style.transform = 'translate(-200vw, 0)'; 
-            break;
-        case 'flowtime':  
-            map.style.transform = 'translate(-100vw, -100vh)'; 
-            break;
-    }
-};
+document.addEventListener('DOMContentLoaded', () => {
+    const viewport = document.getElementById('universe-viewport');
+    document.addEventListener('click', (event) => {
+        const targetBtn = event.target.closest('[data-target]');
+
+        if (!targetBtn) return;
+        const sectorId = targetBtn.dataset.target;
+        const targetSector = document.getElementById(sectorId)
+
+        if (targetSector) {
+            targetSector.scrollIntoView({
+                behavior: 'smooth',
+                block: 'nearest',
+                inline: 'start'
+            });
+        } else {
+            console.warn(`Navigation error: sector wit ID "${sectorId}" not found`)
+        }
+    });
+});
     
 //removed legacy viewport scrolling code for simplicity, now using CSS transitions and panTo function
 
@@ -297,6 +298,21 @@ function initCraters() {
         }
     };
 }
+// Changes the title based on the agent code entered by the user insteda of hard-coding it
+document.addEventListener('DOMContentLoaded', () => {
+    const agentDisplay = document.getElementById('profile-agent-display');
+
+    if (agentDisplay) {
+        // Create a watcher that updates the browser tab title whenever the span changes
+        const observer = new MutationObserver(() => {
+            const currentAgent = agentDisplay.textContent.trim();
+            document.title = `MOON_OS // ${currentAgent}`;
+        });
+
+        // Tell the observer to watch specifically for text content changes inside that span
+        observer.observe(agentDisplay, { childList: true, characterData: true, subtree: true });
+    }
+});
 
 // --- 8. TIDES (MUSIC PLAYER) ---
 function initTides() {
