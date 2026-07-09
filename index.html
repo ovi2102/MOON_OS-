@@ -13,10 +13,10 @@
         <div id="universe-map">
 
             <section class="sector" id="sector-craters">
-                <div class="viewer-container">
+                <div class="viewer-container" id="viewer-container">
                     <div class="sector-header">
                         <h2>CRATERS // DOCUMENT_UPLINK</h2>
-                        <button class="hud-btn return-btn" onclick="panTo('dashboard')">← RETURN_TO_ORBIT</button>
+                        <button class="hud-btn return-btn" data-target = "sector-dashboard">← RETURN_TO_ORBIT</button>
                     </div>
                     <iframe id="craters-iframe" src="" frameborder="0"></iframe>
                 </div>
@@ -103,13 +103,13 @@
                             <div class="module" id="tides-controls">
                                 <div class="mod-tag">MUSIC_PLAYER : TIDES</div>
                                 <div class="tides-info">CURRENT_TRACK: <span id="tides-current-track">NONE</span></div>
-                                <button class="hud-btn full-width mt-10" onclick="panTo('tides')">OPEN_AUDIO_CONSOLE →</button>
+                                <button class="hud-btn full-width mt-10" data-target = "sector-tides">OPEN_AUDIO_CONSOLE →</button>
                             </div>
                         </aside>
 
                     </div>
                     
-                    <div class="scroll-cue" onclick="panTo('flowtime')">DESCEND_TO_DEEP_SPACE ↓</div>
+                    <div class="scroll-cue" data-target="sector-flowtime">DESCEND_TO_DEEP_SPACE ↓</div>
                 </div>
             </section>
 
@@ -117,7 +117,7 @@
                 <div class="viewer-container">
                     <div class="sector-header">
                         <h2>TIDES // AUDIO_CONSOLE</h2>
-                        <button class="hud-btn return-btn" onclick="panTo('dashboard')">RETURN_TO_ORBIT →</button>
+                        <button class="hud-btn return-btn" data-target = "sector-dashboard">RETURN_TO_ORBIT →</button>
                     </div>
                     
                     <div class="music-console">
@@ -161,7 +161,7 @@
 
             <section class="sector" id="sector-flowtime">
                 <div class="flowtime-container">
-                    <button class="hud-btn return-btn top-center" onclick="panTo('dashboard')">↑ ASCEND_TO_ORBIT</button>
+                    <button class="hud-btn return-btn top-center" data-target="sector-dashboard">↑ ASCEND_TO_ORBIT</button>
                     
                     <div id="big-timer">00:00:00</div>
                     
