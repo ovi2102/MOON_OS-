@@ -514,7 +514,8 @@ function navigateToModule(panel) {
 function bindModuleNavigation() {
   document.querySelectorAll('[data-module]').forEach(panel => {
     panel.addEventListener('click', event => {
-      if (event.target.closest('input, button, form, select, textarea')) return;
+      const interactiveElement = event.target.closest('input, button, form, select, textarea');
+      if (interactiveElement && interactiveElement !== panel) return;
       navigateToModule(panel);
     });
     panel.addEventListener('keydown', event => {
