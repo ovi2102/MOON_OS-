@@ -641,14 +641,18 @@ let activityTimerRefreshHandle = null;
 function loadActivityTimerState() {
   const saved = readStorage(ACTIVITY_TIMER_STORAGE_KEY, null);
   if (!saved || typeof saved !== 'object') {
-    return { taskName: '', status: 'idle', elapsedMs: 0, startedAt: null, feedback: '' };
+    return { taskName: '', taskId: null, status: 'idle', elapsedMs: 0, startedAt: null, sessionStartedAt: null, feedback: '' };
   }
   const status = ['idle', 'running', 'paused'].includes(saved.status) ? saved.status : 'idle';
   return {
     taskName: typeof saved.taskName === 'string' ? saved.taskName : '',
+    taskId: saved.taskId == null ? null : String(saved.taskId),
     status,
     elapsedMs: Number.isFinite(saved.elapsedMs) ? Math.max(0, saved.elapsedMs) : 0,
     startedAt: status === 'running' && Number.isFinite(saved.startedAt) ? saved.startedAt : null,
+    sessionStartedAt: Number.isFinite(saved.sessionStartedAt)
+      ? saved.sessionStartedAt
+      : status === 'running' && Number.isFinite(saved.startedAt) ? saved.startedAt : null,
     feedback: ''
   };
 }
@@ -682,23 +686,83 @@ function updateActivityTimerDisplay() {
   status.textContent = activityTimerState.feedback || (activityTimerState.status === 'running'
     ? 'SESSION RUNNING'
     : activityTimerState.status === 'paused' ? 'SESSION PAUSED' : 'READY');
-  document.getElementById('timer-task-name').readOnly = activityTimerState.status === 'running'
+  const taskSelect = document.getElementById('timer-task-select');
+  const taskInput = document.getElementById('timer-task-name');
+  const taskLocked = activityTimerState.status === 'running'
     || (activityTimerState.status === 'paused' && activityTimerState.elapsedMs > 0);
+  taskSelect.disabled = taskLocked;
+  taskInput.disabled = taskLocked || taskSelect.value !== '__custom__';
+  taskInput.hidden = taskSelect.value !== '__custom__';
   document.getElementById('timer-start').disabled = activityTimerState.status === 'running';
   document.getElementById('timer-pause').disabled = activityTimerState.status !== 'running';
   document.getElementById('timer-stop').disabled = activityTimerState.status === 'idle';
 }
 
+function populateActivityTaskSelect(select) {
+  const tasks = readStorage('moon_dashboard_tasks_v1', []);
+  const availableTasks = Array.isArray(tasks)
+    ? tasks.filter(task => task && task.id != null && typeof task.title === 'string' && task.title.trim() && task.status !== 'done')
+    : [];
+  select.replaceChildren();
+
+  const placeholder = document.createElement('option');
+  placeholder.value = '';
+  placeholder.textContent = 'SELECT A DASHBOARD TASK';
+  select.append(placeholder);
+
+  availableTasks.forEach(task => {
+    const option = document.createElement('option');
+    option.value = String(task.id);
+    option.textContent = task.title;
+    select.append(option);
+  });
+
+  const customOption = document.createElement('option');
+  customOption.value = '__custom__';
+  customOption.textContent = 'NEW INDEPENDENT TASK';
+  select.append(customOption);
+
+  const savedTask = availableTasks.find(task => String(task.id) === activityTimerState.taskId);
+  if (savedTask) {
+    select.value = String(savedTask.id);
+    activityTimerState.taskName = savedTask.title;
+  } else if (activityTimerState.taskName) {
+    select.value = '__custom__';
+    activityTimerState.taskId = null;
+  } else {
+    select.value = '';
+  }
+}
+
+function syncActivityTimerFromStorage() {
+  if (!document.getElementById('timer-display')) return;
+  activityTimerState = loadActivityTimerState();
+  populateActivityTaskSelect(document.getElementById('timer-task-select'));
+  const taskInput = document.getElementById('timer-task-name');
+  taskInput.value = activityTimerState.taskName;
+  updateActivityTimerDisplay();
+}
+
 function startActivityTimer() {
   if (activityTimerState.status === 'running') return;
   if (activityTimerState.status === 'idle' || activityTimerState.elapsedMs === 0) {
+    const taskSelect = document.getElementById('timer-task-select');
     const taskName = document.getElementById('timer-task-name').value.trim();
-    if (!taskName) {
+    const selectedTask = taskSelect.selectedOptions[0];
+    if (taskSelect.value && taskSelect.value !== '__custom__') {
+      activityTimerState.taskId = taskSelect.value;
+      activityTimerState.taskName = selectedTask.textContent.trim();
+    } else {
+      activityTimerState.taskId = null;
+      activityTimerState.taskName = taskName;
+    }
+    const selectedTaskName = activityTimerState.taskName;
+    if (!selectedTaskName) {
       activityTimerState.feedback = 'ENTER A TASK NAME FIRST';
       updateActivityTimerDisplay();
       return;
     }
-    activityTimerState.taskName = taskName;
+    if (!activityTimerState.sessionStartedAt) activityTimerState.sessionStartedAt = Date.now();
   }
   activityTimerState.status = 'running';
   activityTimerState.startedAt = Date.now();
@@ -734,15 +798,19 @@ function stopActivityTimer() {
     text: taskName,
     completed: true,
     createdAt: stoppedAt.toISOString(),
+    startedAt: new Date(activityTimerState.sessionStartedAt || stoppedAt.getTime() - elapsedMs).toISOString(),
+    endedAt: stoppedAt.toISOString(),
     dateKey: getISTDateKey(stoppedAt),
     durationSeconds: Math.max(1, Math.floor(elapsedMs / 1000)),
-    logType: 'work-session'
+    logType: 'work-session',
+    taskId: activityTimerState.taskId
   });
   localStorage.setItem(DAILY_LOG_STORAGE_KEY, JSON.stringify(dailyLogs));
 
   activityTimerState.status = 'idle';
   activityTimerState.elapsedMs = 0;
   activityTimerState.startedAt = null;
+  activityTimerState.sessionStartedAt = null;
   activityTimerState.feedback = 'SESSION SAVED TO DAILY LOGS';
   saveActivityTimerState();
   updateActivityTimerDisplay();
@@ -759,16 +827,33 @@ function renderActivityTimer(content) {
   returnLink.href = 'index.html';
   addText(view, 'div', 'timer-kicker', 'MOON_OS // ACTIVITY TRACKER');
 
+  const taskSelect = document.createElement('select');
+  taskSelect.id = 'timer-task-select';
+  taskSelect.className = 'activity-timer-task';
+  taskSelect.setAttribute('aria-label', 'Choose a task from the dashboard or create an independent task');
+  populateActivityTaskSelect(taskSelect);
+  taskSelect.addEventListener('change', () => {
+    const selectedTask = taskSelect.selectedOptions[0];
+    activityTimerState.taskId = taskSelect.value && taskSelect.value !== '__custom__' ? taskSelect.value : null;
+    activityTimerState.taskName = activityTimerState.taskId ? selectedTask.textContent.trim() : '';
+    document.getElementById('timer-task-name').value = activityTimerState.taskName;
+    activityTimerState.feedback = '';
+    saveActivityTimerState();
+    updateActivityTimerDisplay();
+  });
+  view.append(taskSelect);
+
   const taskInput = document.createElement('input');
   taskInput.id = 'timer-task-name';
   taskInput.type = 'text';
   taskInput.maxLength = 100;
-  taskInput.placeholder = 'NAME THE ACTIVITY';
-  taskInput.setAttribute('aria-label', 'Activity being timed');
+  taskInput.placeholder = 'NAME YOUR INDEPENDENT TASK';
+  taskInput.setAttribute('aria-label', 'Name an independent task');
   taskInput.value = activityTimerState.taskName;
   taskInput.addEventListener('input', () => {
     if (activityTimerState.status !== 'idle' || activityTimerState.elapsedMs > 0) return;
     activityTimerState.taskName = taskInput.value;
+    activityTimerState.taskId = null;
     saveActivityTimerState();
   });
   view.append(taskInput);
@@ -788,7 +873,17 @@ function renderActivityTimer(content) {
 
   updateActivityTimerDisplay();
   activityTimerRefreshHandle = window.setInterval(updateActivityTimerDisplay, 250);
-  document.addEventListener('visibilitychange', updateActivityTimerDisplay, { once: true });
+  window.addEventListener('storage', event => {
+    if (event.key === ACTIVITY_TIMER_STORAGE_KEY) syncActivityTimerFromStorage();
+    if (event.key === 'moon_dashboard_tasks_v1') {
+      populateActivityTaskSelect(document.getElementById('timer-task-select'));
+      updateActivityTimerDisplay();
+    }
+  });
+  window.addEventListener('focus', syncActivityTimerFromStorage);
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) syncActivityTimerFromStorage();
+  });
 }
 
 function renderTimetable(content) {
@@ -918,6 +1013,15 @@ function initModule() {
     renderActivityTimer(content);
   }
   else renderTimetable(content);
+
+  if (view === 'daily-logs') {
+    window.addEventListener('storage', event => {
+      if (event.key !== DAILY_LOG_STORAGE_KEY) return;
+      const savedLogs = readStorage(DAILY_LOG_STORAGE_KEY, []);
+      dailyLogEntries = Array.isArray(savedLogs) ? savedLogs : [];
+      renderDailyLogWorkspace();
+    });
+  }
 
   const projectId = new URLSearchParams(window.location.search).get('projectId');
   const activeProject = view === 'project'

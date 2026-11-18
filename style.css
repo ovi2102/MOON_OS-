@@ -1171,6 +1171,16 @@ body.timer-mode .module-content {
   text-align: center;
 }
 
+.activity-timer-task:disabled {
+  color: var(--muted);
+  cursor: default;
+}
+
+.activity-timer-task option {
+  background: #050505;
+  color: var(--text);
+}
+
 .activity-timer-task::placeholder {
   color: var(--muted-2);
 }

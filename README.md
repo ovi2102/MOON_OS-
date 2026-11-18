@@ -8,11 +8,13 @@ Short, local-first productivity dashboard with tasks, habits, a focus timer, fil
 - Space-themed dashboard with a 3D wireframe moon (Three.js)
 - Task list (add / complete / delete) with constellation visualization
 - Habit tracker with 7-day boxes
-- Focus timer (start / pause / stop) that accumulates total time
+- Large-format activity timer with dashboard-task selection, independent tasks, and work sessions saved to Daily Logs
 - Embedded file viewer for PDFs, images, and videos
 - Local music player (load local audio files, play, pause, seek)
 - Editable operator profile (name + agent ID) saved in `localStorage`
 - Local persistence for tasks, habits, and total time via `localStorage`
+
+The activity timer uses a saved start timestamp, so elapsed time remains accurate when the app is minimized, in another tab, or reopened. Its session state and Daily Logs are stored in the browser/Electron local storage for that device and app origin; they do not automatically sync between different devices.
 
 ## Quick Start
 Requirements: Node.js

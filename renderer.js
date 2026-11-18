@@ -701,4 +701,10 @@ window.addEventListener('DOMContentLoaded', () => {
   initEvents();
 });
 
+window.addEventListener('storage', event => {
+  if (event.key !== DAILY_LOG_STORAGE_KEY) return;
+  state.dailyLogs = loadDailyLogs();
+  renderDailyLogs();
+});
+
 window.addEventListener('beforeunload', saveTasks);
