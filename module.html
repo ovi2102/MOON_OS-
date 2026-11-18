@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOON_OS // MODULE</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="module-body">
+    <div class="laptop-shell module-shell">
+        <div class="screen module-screen">
+            <header class="module-header">
+                <a href="index.html">&lt; RETURN TO COMMAND</a>
+                <span>MOON_OS // WORKSPACE</span>
+                <time class="module-clock" id="module-clock"></time>
+            </header>
+            <main class="module-content" id="module-content"></main>
+        </div>
+    </div>
+    <div class="task-modal hidden" id="project-modal">
+        <div class="task-modal-card">
+            <div class="task-modal-head">
+                <span>Add project</span>
+                <button type="button" id="close-project-modal" class="modal-close" aria-label="Close project form">×</button>
+            </div>
+            <form id="project-form">
+                <label>
+                    <span>Project name</span>
+                    <input type="text" id="project-name-input" maxlength="80" required>
+                </label>
+                <label>
+                    <span>Start date</span>
+                    <input type="date" id="project-start-date-input" required>
+                </label>
+                <label>
+                    <span>Description</span>
+                    <input type="text" id="project-description-input" maxlength="180" placeholder="Optional">
+                </label>
+                <p id="project-form-error" role="alert"></p>
+                <div class="modal-actions">
+                    <button type="submit" class="save-btn">Add project</button>
+                    <button type="button" class="cancel-btn" id="cancel-project">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="module.js"></script>
+</body>
+</html>

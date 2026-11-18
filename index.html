@@ -2,203 +2,256 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>MOON_OS // M2108</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOON_OS // COMMAND</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="stars-layer-1" class="star-plane"></div>
-    <div id="stars-layer-2" class="star-plane"></div>
-
-    <div id="universe-viewport">
-        <div id="universe-map">
-
-            <section class="sector" id="sector-craters">
-                <div class="viewer-container">
-                    <div class="sector-header">
-                        <h2>CRATERS // DOCUMENT_UPLINK</h2>
-                        <button class="hud-btn return-btn" onclick="panTo('dashboard')">← RETURN_TO_ORBIT</button>
+    <div class="laptop-shell">
+        <div class="screen">
+            <div class="screen-grid">
+                <header class="topbar">
+                    <canvas class="header-wave" id="header-wave" aria-hidden="true"></canvas>
+                    <button class="agent-card left-card profile-card-trigger" id="open-profile-card" type="button" aria-haspopup="dialog" aria-controls="profile-card-modal">
+                        WELCOME, <span id="profile-name-display">OVI</span><br>
+                        SYSTEM STATUS : ACTIVE<br>
+                        ROLE : ON DUTY
+                    </button>
+                    <div class="center-title">
+                        <h1 class="glitch-title">MOON_OS</h1>
+                        <p class="sub-title">MODULAR ORGANIZATION AND OBSERVATIONAL NETWORK OPERATING SYSTEM</p>
                     </div>
-                    <iframe id="craters-iframe" src="" frameborder="0"></iframe>
-                </div>
-            </section>
+                    <button class="agent-card right-card timer-launch-card" type="button" data-module="activity-timer" aria-label="Open activity timer">
+                        <div id="live-clock" class="header-clock"></div>
+                    </button>
+                </header>
 
-            <section class="sector" id="sector-dashboard">
-                <div class="dashboard-wrapper">
-                    
-                    <header class="os-header">
-                        <div class="agent-card left-card">
-                            WELCOME, <span id="profile-name-display">OVI</span><br>
-                            SYSTEM STATUS : ACTIVE<br>
-                            ROLE : ON DUTY
+                <aside class="left-stack">
+                    <section class="panel mission-panel" data-module="current-mission" data-mission-target="current" tabindex="0" role="link" aria-label="Open current mission">
+                        <div class="panel-head">
+                            <span>Current mission</span>
+                            <span class="window-dot"></span>
                         </div>
-                        <div class="center-title">
-                            <h1 class="glitch-title">MOON_OS</h1>
-                            <p class="sub-title">MODULAR ORGANIZATION AND OBSERVATIONAL NETWORK OPERATING SYSTEM</p>
-                            <button class="hud-btn small-btn" id="btn-edit-profile">EDIT_PROFILE</button>
+                        <div class="panel-body mission-body">
+                            <div class="assigned-task" id="current-mission-task">No task assigned</div>
+                            <form class="mission-entry-form" id="current-mission-form">
+                                <input id="current-mission-input" type="text" placeholder="Enter current task" aria-label="Current mission task">
+                                <button type="submit" aria-label="Set current mission">SET</button>
+                            </form>
+                            <div class="mission-hint">Drop a task here to assign a copy</div>
+                            <div class="progress-bar"><span></span></div>
                         </div>
-                        <div class="agent-card right-card">
-                            AGENT : <span id="profile-agent-display">M2108</span>
+                    </section>
+
+                    <section class="panel mission-panel next-mission-panel" data-module="next-mission" data-mission-target="next" tabindex="0" role="link" aria-label="Open next mission">
+                        <div class="panel-head">
+                            <span>Next mission</span>
+                            <span class="window-dot"></span>
                         </div>
-                    </header>
+                        <div class="panel-body mission-body next-mission-body">
+                            <div class="assigned-task" id="next-mission-task">No task planned</div>
+                            <form class="mission-entry-form" id="next-mission-form">
+                                <input id="next-mission-input" type="text" placeholder="Enter next task" aria-label="Next mission task">
+                                <button type="submit" aria-label="Set next mission">SET</button>
+                            </form>
+                            <div class="mission-hint">Drop a task here to assign a copy</div>
+                        </div>
+                    </section>
 
-                    <div class="hud-grid">
-                        
-                        <aside class="hud-panel">
-                            <div class="module" id="reflections">
-                                <div class="mod-tag">DAILY_STATS : REFLECTIONS</div>
-                                <div class="stat-line"><span>TOTAL_TIME_STUDIED</span><span id="stat-time" class="highlight">00.00h</span></div>
-                                <div class="stat-line"><span>TASKS_COMPLETED</span><span id="stat-tasks" class="highlight">0</span></div>
-                            </div>
-                            
-                            <div class="module" id="eclipse">
-                                <div class="mod-tag">IMPROVEMENT : ECLIPSE</div>
-                                <div class="graph-box">
-                                    <svg viewBox="0 0 200 50" class="hud-graph">
-                                        <polyline points="0,40 30,20 60,35 90,10 120,25 150,5 200,15" fill="none" stroke="#fff" stroke-width="1.5"/>
-                                        <circle cx="150" cy="5" r="3" fill="#fff"/>
-                                    </svg>
-                                </div>
-                            </div>
+                    <section class="panel calendar-panel" data-module="timetable" tabindex="0" role="link" aria-label="Open calendar timetable">
+                        <div class="panel-head">
+                            <span>Calendar timetable</span>
+                            <span class="window-dot"></span>
+                        </div>
+                        <div class="calendar-grid">
+                            <div class="calendar-day">Mon</div>
+                            <div class="calendar-day">Tue</div>
+                            <div class="calendar-day">Wed</div>
+                            <div class="calendar-day">Thu</div>
+                            <div class="calendar-day">Fri</div>
+                            <div class="calendar-day">Sat</div>
+                            <div class="calendar-day">Sun</div>
 
-                            <div class="module" id="craters-controls">
-                                <div class="mod-tag">FILE_READER : CRATERS</div>
-                                <div class="input-row">
-                                    <input type="text" id="craters-input" placeholder="PASTE_LECTURE_LINK_OR_PATH...">
-                                    <button class="hud-btn" id="btn-load-craters">ENGAGE</button>
-                                </div>
-                                <div class="input-row mt-10">
-                                    <input type="file" id="local-file-picker" accept="application/pdf, video/*, image/*" hidden>
-                                    <button class="hud-btn full-width" onclick="document.getElementById('local-file-picker').click()">BROWSE_LOCAL_FILES</button>
-                                </div>
-                            </div>
-                        </aside>
+                            <div class="calendar-day">1</div><div class="calendar-day">2</div><div class="calendar-day">3</div><div class="calendar-day">4</div><div class="calendar-day">5</div><div class="calendar-day">6</div><div class="calendar-day">7</div>
+                            <div class="calendar-day">8</div><div class="calendar-day">9</div><div class="calendar-day">10</div><div class="calendar-day active">11</div><div class="calendar-day">12</div><div class="calendar-day">13</div><div class="calendar-day">14</div>
+                            <div class="calendar-day">15</div><div class="calendar-day">16</div><div class="calendar-day">17</div><div class="calendar-day">18</div><div class="calendar-day">19</div><div class="calendar-day">20</div><div class="calendar-day">21</div>
+                            <div class="calendar-day">22</div><div class="calendar-day">23</div><div class="calendar-day">24</div><div class="calendar-day">25</div><div class="calendar-day">26</div><div class="calendar-day">27</div><div class="calendar-day">28</div>
+                            <div class="calendar-day">29</div><div class="calendar-day">30</div><div class="calendar-day">31</div><div class="calendar-day empty"></div><div class="calendar-day empty"></div><div class="calendar-day empty"></div><div class="calendar-day empty"></div>
+                        </div>
+                    </section>
+                </aside>
 
-                        <main class="moon-sector">
-                            <div id="constellation-layer">
-                                <svg id="constellation-lines" width="600" height="600"></svg>
-                                <div id="constellation-dots"></div>
-                            </div>
-                            <div id="moon-container"></div>
-                        </main>
-
-                        <aside class="hud-panel">
-                            <div class="module" id="orbit">
-                                <div class="mod-tag">TASK_QUEUE : ORBIT</div>
-                                <div id="todo-list" class="thin-scroll"></div>
-                                <div class="input-row mt-10">
-                                    <input type="text" id="todo-input" placeholder="CMD_NEW_TASK...">
-                                    <button class="hud-btn" id="btn-add-task">+</button>
-                                </div>
-                            </div>
-
-                            <div class="module" id="luminescence">
-                                <div class="mod-tag">HABIT_TRACKER : LUMINESCENCE</div>
-                                <div class="habit-list thin-scroll" id="habit-list"></div>
-                                <div class="input-row mt-10">
-                                    <input type="text" id="habit-input" placeholder="ADD_HABIT...">
-                                    <button class="hud-btn" id="btn-add-habit">+</button>
-                                </div>
-                            </div>
-
-                            <div class="module" id="tides-controls">
-                                <div class="mod-tag">MUSIC_PLAYER : TIDES</div>
-                                <div class="tides-info">CURRENT_TRACK: <span id="tides-current-track">NONE</span></div>
-                                <button class="hud-btn full-width mt-10" onclick="panTo('tides')">OPEN_AUDIO_CONSOLE →</button>
-                            </div>
-                        </aside>
-
+                <main class="panel task-board-panel">
+                    <div class="panel-head task-head">
+                        <span>Mission tasks</span>
+                        <button id="add-task-btn" class="mini-action">+ New task</button>
                     </div>
-                    
-                    <div class="scroll-cue" onclick="panTo('flowtime')">DESCEND_TO_DEEP_SPACE ↓</div>
-                </div>
-            </section>
 
-            <section class="sector" id="sector-tides">
-                <div class="viewer-container">
-                    <div class="sector-header">
-                        <h2>TIDES // AUDIO_CONSOLE</h2>
-                        <button class="hud-btn return-btn" onclick="panTo('dashboard')">RETURN_TO_ORBIT →</button>
-                    </div>
-                    
-                    <div class="music-console">
-                        <div class="audio-visualizer">
-                            <svg viewBox="0 0 100 30" class="eq-svg">
-                                <rect x="10" y="10" width="5" height="20" class="eq-bar"/>
-                                <rect x="25" y="5" width="5" height="25" class="eq-bar"/>
-                                <rect x="40" y="15" width="5" height="15" class="eq-bar"/>
-                                <rect x="55" y="8" width="5" height="22" class="eq-bar"/>
-                                <rect x="70" y="12" width="5" height="18" class="eq-bar"/>
-                                <rect x="85" y="4" width="5" height="26" class="eq-bar"/>
-                            </svg>
-                        </div>
-                        
-                        <div class="track-progress">
-                            <span id="tides-time-curr">0:00</span>
-                            <div class="progress-bar-bg" id="tides-progress-bg">
-                                <div class="progress-bar-fill" id="tides-progress-fill"></div>
+                    <div class="board-grid">
+                        <div class="board-column" data-status="todo">
+                            <div class="column-header">
+                                <span>To-do</span>
+                                <span class="count-badge" id="count-todo">0</span>
                             </div>
-                            <span id="tides-time-total">0:00</span>
+                            <div class="task-list" id="todo-list"></div>
                         </div>
 
-                        <div class="music-controls">
-                            <button class="hud-btn big-btn" id="btn-prev">⏮</button>
-                            <button class="hud-btn big-btn" id="btn-play-pause">⏵</button>
-                            <button class="hud-btn big-btn" id="btn-next">⏭</button>
-                        </div>
-
-                        <div class="playlist-section mt-10">
-                            <div class="input-row">
-                                <input type="file" id="tides-file-picker" accept="audio/*" multiple hidden>
-                                <button class="hud-btn full-width" onclick="document.getElementById('tides-file-picker').click()">LOAD_LOCAL_AUDIO_FILES</button>
+                        <div class="board-column" data-status="due-soon">
+                            <div class="column-header">
+                                <span>Due soon</span>
+                                <span class="count-badge" id="count-due-soon">0</span>
                             </div>
-                            <div id="tides-playlist" class="thin-scroll mt-10"></div>
+                            <div class="task-list" id="due-soon-list"></div>
+                        </div>
+
+                        <div class="board-column" data-status="in-progress">
+                            <div class="column-header">
+                                <span>In progress</span>
+                                <span class="count-badge" id="count-in-progress">0</span>
+                            </div>
+                            <div class="task-list" id="in-progress-list"></div>
+                        </div>
+
+                        <div class="board-column" data-status="done">
+                            <div class="column-header">
+                                <span>Done</span>
+                                <span class="count-badge" id="count-done">0</span>
+                            </div>
+                            <div class="task-list" id="done-list"></div>
                         </div>
                     </div>
-                </div>
-            </section>
+                </main>
 
-            <section class="sector"></section>
+                <aside class="right-stack">
+                    <section class="panel daily-panel" data-module="daily-logs" tabindex="0" role="link" aria-label="Open daily logs">
+                        <div class="panel-head">
+                            <span>Daily logs</span>
+                            <span class="window-dot"></span>
+                        </div>
+                        <div class="panel-body daily-body">
+                            <form class="daily-log-form" id="daily-log-form">
+                                <input id="daily-log-input" type="text" placeholder="Add accountability task" aria-label="New daily log task" required>
+                                <button type="submit" aria-label="Add daily log task">+</button>
+                            </form>
+                            <ul id="daily-log-list"></ul>
+                        </div>
+                    </section>
 
-            <section class="sector" id="sector-flowtime">
-                <div class="flowtime-container">
-                    <button class="hud-btn return-btn top-center" onclick="panTo('dashboard')">↑ ASCEND_TO_ORBIT</button>
-                    
-                    <div id="big-timer">00:00:00</div>
-                    
-                    <div class="timer-controls">
-                        <button class="void-btn" id="btn-orbit">ORBIT</button>
-                        <button class="void-btn" id="btn-stasis">STASIS</button>
-                        <button class="void-btn" id="btn-drift">DRIFT</button>
-                    </div>
-                </div>
-            </section>
+                    <section class="panel archive-panel" data-module="archive" data-archive-target tabindex="0" role="link" aria-label="Open archive. Drop completed tasks here to archive them.">
+                        <div class="panel-head">
+                            <span>Archive</span>
+                            <span class="count-badge" id="archive-count">0</span>
+                        </div>
+                        <div class="panel-body archive-body">
+                            <div class="archive-hint">Drop completed tasks here to clear them from Done.</div>
+                            <ul id="archive-preview"></ul>
+                        </div>
+                    </section>
 
-            <section class="sector"></section>
-
-        </div>
-    </div>
-
-    <audio id="tides-audio-player"></audio>
-
-    <div class="profile-modal" id="profile-modal" hidden>
-        <div class="profile-modal-card">
-            <h3>PERSONALIZE_OPERATOR</h3>
-            <label class="profile-field">
-                <span>NAME</span>
-                <input type="text" id="profile-name-input" placeholder="ENTER_NAME...">
-            </label>
-            <label class="profile-field">
-                <span>AGENT_ID</span>
-                <input type="text" id="profile-agent-input" placeholder="ENTER_AGENT_ID...">
-            </label>
-            <div class="input-row">
-                <button class="hud-btn" id="btn-save-profile">SAVE</button>
-                <button class="hud-btn" id="btn-cancel-profile">CANCEL</button>
+                    <section class="panel projects-panel" data-module="projects" tabindex="0" role="link" aria-label="Open projects">
+                        <div class="panel-head">
+                            <span>Projects</span>
+                            <span class="window-dot"></span>
+                        </div>
+                        <div class="panel-body projects-body">
+                            <strong id="project-summary-count">0 PROJECTS</strong>
+                            <ul id="project-summary-list"></ul>
+                        </div>
+                    </section>
+                </aside>
             </div>
         </div>
     </div>
 
-     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <div class="task-modal hidden" id="task-modal">
+        <div class="task-modal-card">
+            <div class="task-modal-head">
+                <span>New mission task</span>
+                <button type="button" id="close-modal-btn" class="modal-close">×</button>
+            </div>
+            <form id="task-form">
+                <label>
+                    <span>Task title</span>
+                    <input type="text" id="task-title" required>
+                </label>
+                <div class="modal-row">
+                    <label>
+                        <span>Project</span>
+                        <input type="text" id="task-project" placeholder="Project name">
+                    </label>
+                    <label>
+                        <span>Priority</span>
+                        <select id="task-priority">
+                            <option value="High">High</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Low">Low</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="modal-row">
+                    <label>
+                        <span>Due</span>
+                        <input type="text" id="task-due" placeholder="e.g. 28 Oct // 14:00">
+                    </label>
+                    <label>
+                        <span>Status</span>
+                        <select id="task-status">
+                            <option value="todo">To-do</option>
+                            <option value="due-soon">Due soon</option>
+                            <option value="in-progress">In progress</option>
+                            <option value="done">Done</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="modal-row">
+                    <label>
+                        <span>Tag</span>
+                        <input type="text" id="task-tag" placeholder="Optional tag">
+                    </label>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="save-btn">Save</button>
+                    <button type="button" class="cancel-btn" id="cancel-modal-btn">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="profile-modal hidden" id="profile-card-modal">
+        <section class="profile-id-card" role="dialog" aria-modal="true" aria-labelledby="profile-card-title">
+            <button type="button" class="profile-card-close" id="close-profile-card" aria-label="Close identification card">×</button>
+            <header class="profile-id-header">
+                <h2 id="profile-card-title">MOON_OS</h2>
+                <div class="profile-id-mark" aria-hidden="true"><span></span><span></span><span></span></div>
+                <p>STUDENT PERSONNEL // IDENTIFICATION</p>
+            </header>
+            <div class="profile-id-content">
+                <div class="profile-photo-column">
+                    <div class="profile-photo-frame">
+                        <img id="profile-photo-preview" alt="Profile portrait" hidden>
+                        <span id="profile-photo-placeholder">PHOTO<br>NOT SET</span>
+                    </div>
+                    <input type="file" id="profile-photo-input" accept="image/*" hidden>
+                    <button type="button" class="profile-photo-action" id="choose-profile-photo">UPLOAD / CHANGE PHOTO</button>
+                    <button type="button" class="profile-photo-action secondary" id="remove-profile-photo" hidden>REMOVE PHOTO</button>
+                    <p class="profile-photo-status" id="profile-photo-status" aria-live="polite">NO PHOTO SAVED</p>
+                </div>
+                <div class="profile-id-details">
+                    <p class="profile-id-name">OVI K</p>
+                    <p class="profile-id-role">STUDENT // SEMICONDUCTOR ENGINEERING</p>
+                    <dl>
+                        <div><dt>DOB</dt><dd>21 FEB 2008</dd></div>
+                        <div><dt>PRN</dt><dd>26033010098</dd></div>
+                        <div><dt>SEM</dt><dd>1</dd></div>
+                        <div><dt>BRANCH</dt><dd>SEMICONDUCTOR ENGINEERING</dd></div>
+                    </dl>
+                    <div class="profile-id-hexagons" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+                    <p class="profile-id-footer">MOON_OS // PERSONAL IDENTIFICATION</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
     <script src="renderer.js"></script>
 </body>
 </html>

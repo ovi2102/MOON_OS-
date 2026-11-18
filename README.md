@@ -1,6 +1,6 @@
-# MOON_OS
+# MOON OS 2.0
 
-> Modular Organization and Observational Network Operating System — a space-themed personal dashboard.
+> Modular Organization and Observational Network Operating System — version 2.0, a space-themed personal dashboard.
 
 Short, local-first productivity dashboard with tasks, habits, a focus timer, file viewer, and music player.
 
